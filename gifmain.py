@@ -1,8 +1,11 @@
 from tkinter import *
+import tkinter.filedialog
 import tkinter.messagebox
 from tkinter import simpledialog
+from tkinter import filedialog
 import cv2
 import imageio
+from PIL import Image
 
 t=Tk()
 t.title("Gif Creator")
@@ -33,6 +36,22 @@ def capture():
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             writer.append_data(rgb_frame)
 
+def pictures():
+    types=[("JPEG", "*.jpeg"),("WEBP","*.webp")]
+    images=tkinter.filedialog.askopenfilenames(filetypes=types,initialdir=r"C:\Users\ADMIN\Desktop\Gif creator\gif-creator\images",title="Select pictures")
+    imagcaptures=list(images)
+    filename=simpledialog.askstring(title="Gif Name",prompt="Enter Gif name\t\t")
+    gif=filename + ".gif"
+    result=[]
+    for img in imagcaptures:
+        imgnew=Image.open(img)
+        proc=imgnew.resize((250,250))
+        result.append(proc)
+    imageio.mimsave(gif, result, duration=10)
+
+            
+
+
 l1=Label(text="GIF Maker",width=58,height=5,font=("Gothic 20 italic bold"),background="#CFE964")
 l1.grid(row=3,column=2,rowspan=3,columnspan=3)
 l2=Label(text="Make a GIF using:",width=50,height=1,font=("Courier 15"),background="#CFE964")
@@ -42,7 +61,7 @@ options=Frame(t)
 options.grid(row=7,column=2,columnspan=2)
 b1=Button(options,text="Web Cam",height=2,width=10,font=("Times"),command=capture)
 b1.grid(row=0,column=0,padx=150)
-b2=Button(options,text="Existing pictures",height=2,width=15,font=("Times"))
+b2=Button(options,text="Existing pictures",height=2,width=15,font=("Times"),command=pictures)
 b2.grid(row=0,column=3,padx=100)
 
 mainloop()
